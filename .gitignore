@@ -1,0 +1,14 @@
+.env
+*/.env
+
+# FRONTEND
+frontend/node_modules
+frontend//dist
+frontend//build
+
+
+# BACKEND
+backend/venv/
+backend/.env
+backend/.env
+backend/.venv
