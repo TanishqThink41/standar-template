@@ -2,12 +2,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Slide, Theme, TableData } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/powerpoint/ui/scroll-area';
 import { 
   Trash2, Bold, Italic, Underline, List, ListOrdered, 
   Image as ImageIcon, Table as TableIcon
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/powerpoint/ui/button';
 import { handleImageUpload } from '@/lib/export';
 
 interface SlidePreviewProps {

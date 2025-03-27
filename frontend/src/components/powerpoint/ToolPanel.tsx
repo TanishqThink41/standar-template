@@ -1,11 +1,11 @@
 
 import React, { useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/powerpoint/ui/button';
 import { templates, themes } from '@/lib/templates';
 import { Template, Theme } from '@/lib/types';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/powerpoint/ui/tabs';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/powerpoint/ui/scroll-area';
 import { ImagePlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { handleImageUpload } from '@/lib/export';

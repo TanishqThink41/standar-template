@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/powerpoint/ui/dialog';
 import { templates } from '@/lib/templates';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/powerpoint/ui/button';
 
 interface TemplateSelectorProps {
   isOpen: boolean;

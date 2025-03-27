@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/powerpoint/ui/button';
+import { Input } from '@/components/powerpoint/ui/input';
 import { toast } from 'sonner';
 import { 
   Save, 
@@ -20,7 +20,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/powerpoint/ui/dropdown-menu';
 import { Presentation, TableData } from '@/lib/types';
 
 interface NavbarProps {

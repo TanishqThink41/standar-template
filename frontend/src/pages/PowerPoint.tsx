@@ -1,14 +1,14 @@
 
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
-import SlidePreview from '@/components/SlidePreview';
-import SlideList from '@/components/SlideList';
-import ToolPanel from '@/components/ToolPanel';
-import TemplateSelector from '@/components/TemplateSelector';
+import Navbar from '@/components/powerpoint/Navbar';
+import SlidePreview from '@/components/powerpoint/SlidePreview';
+import SlideList from '@/components/powerpoint/SlideList';
+import ToolPanel from '@/components/powerpoint/ToolPanel';
+import TemplateSelector from '@/components/powerpoint/TemplateSelector';
 import { usePresentation } from '@/hooks/usePresentation';
 import { themes } from '@/lib/templates';
 import { exportToPptx } from '@/lib/export';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/powerpoint/ui/button';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -18,7 +18,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/powerpoint/ui/scroll-area';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomTheme, TableData, Theme } from '@/lib/types';
 

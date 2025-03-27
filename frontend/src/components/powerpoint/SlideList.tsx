@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Slide, Theme } from '@/lib/types';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/powerpoint/ui/button';
 import { cn } from '@/lib/utils';
 import { Plus, Trash, ChevronUp, ChevronDown } from 'lucide-react';
 

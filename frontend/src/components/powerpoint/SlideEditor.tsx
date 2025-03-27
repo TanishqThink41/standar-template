@@ -1,9 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Slide, SlideContent, TableData } from '@/lib/types';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+import { Input } from '@/components/powerpoint/ui/input';
+import { Textarea } from '@/components/powerpoint/ui/textarea';
+import { Button } from '@/components/powerpoint/ui/button';
 import { Image, Upload, Trash, Bold, Italic, Underline, List, Image as ImageIcon, Table, AlignCenter } from 'lucide-react';
 import { handleImageUpload } from '@/lib/export';
 import {
@@ -12,8 +12,8 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarTrigger,
-} from "@/components/ui/menubar";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/components/powerpoint/ui/menubar";
+import { ScrollArea } from "@/components/powerpoint/ui/scroll-area";
 
 interface SlideEditorProps {
   slide: Slide;
