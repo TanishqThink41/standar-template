@@ -1,16 +1,10 @@
-import os
-import json
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import upload
-import openai
-
+from app.routes import presentation
 
 app = FastAPI()
 
 
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # Frontend URL
@@ -20,15 +14,11 @@ app.add_middleware(
 )
 
 # Include our route modules with prefixes
-app.include_router(upload.router, prefix="/upload")
+app.include_router(presentation.router, prefix="/presentation")
 
-# Define a basic Pydantic model for input validation
-class InputData(BaseModel):
-    data: dict
 
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome to the presentation assistant API!"}
+    return {"message": "Presentation API!"}
 
-
-# To run the app use: uvicorn main:app --reload
+# To run the app, use: uvicorn main:app --reload

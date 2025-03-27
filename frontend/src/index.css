@@ -1,1 +1,162 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
+  }
+
+  /* Add custom styles */
+  .glass {
+    @apply backdrop-blur-md bg-white/80 border border-white/20;
+  }
+
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/10 border border-white/10;
+  }
+
+  .slide-shadow {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  }
+
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Animations */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+
+  .subtle-slide-in {
+    animation: subtleSlideIn 0.5s ease-out forwards;
+  }
+
+  @keyframes subtleSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Input focus styles */
+  input:focus-visible, textarea:focus-visible {
+    @apply outline-none ring-2 ring-primary/20 ring-offset-2 ring-offset-white;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply px-4 py-2 rounded-lg transition-all duration-300 
+           focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 
+           active:scale-95;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-secondary text-foreground;
+  }
+
+  /* Slide and Content Styles */
+  .slide-content-editable {
+    @apply outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 
+           rounded-md px-2 py-1 transition-colors duration-200;
+  }
+
+  /* Navigation effects */
+  .nav-item {
+    @apply relative px-4 py-2 cursor-pointer transition-colors duration-200
+           after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 
+           after:bg-primary after:transition-all after:duration-300;
+  }
+  
+  .nav-item:hover,
+  .nav-item.active {
+    @apply after:w-full;
+  }
+
+  /* Markdown Content Styling */
+  .markdown-content {
+    @apply prose prose-sm max-w-none;
+  }
+  
+  .markdown-content ul {
+    @apply pl-5 space-y-1 list-disc;
+  }
+  
+  .markdown-content ol {
+    @apply pl-5 space-y-1 list-decimal;
+  }
+  
+  .markdown-content p {
+    @apply mb-2;
+  }
+  
+  .markdown-content strong {
+    @apply font-bold;
+  }
+  
+  .markdown-content em {
+    @apply italic;
+  }
+  
+  .markdown-content u {
+    @apply underline;
+  }
+}
