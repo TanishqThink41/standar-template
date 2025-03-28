@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PowerPoint from "./pages/PowerPoint";
 import NotFound from "./pages/NotFound";
+import DashboardCanvas from "./pages/DashboardCanvas";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/powerpoint" element={<PowerPoint />} />
+          <Route path="/dashboard" element={<DashboardCanvas />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

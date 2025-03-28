@@ -15,15 +15,16 @@ interface ToolPanelProps {
   onSelectTheme: (themeId: string) => void;
   currentTheme: string;
   onAddCustomTheme?: (themeId: string, backgroundImage: string) => void;
+  customThemes?: Theme[];
 }
 
 const ToolPanel: React.FC<ToolPanelProps> = ({
   onSelectTemplate,
   onSelectTheme,
   currentTheme,
-  onAddCustomTheme
+  onAddCustomTheme,
+  customThemes = []
 }) => {
-  const [customThemes, setCustomThemes] = useState<Theme[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const triggerImageUpload = () => {
@@ -36,17 +37,6 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
       handleImageUpload(file, (base64) => {
         const themeCount = customThemes.length + 1;
         const newThemeId = `theme-${themeCount}`;
-        const newTheme: Theme = {
-          id: newThemeId,
-          name: `Custom Theme ${themeCount}`,
-          primary: themes[0].primary,
-          secondary: themes[0].secondary,
-          background: themes[0].background,
-          text: themes[0].text,
-          backgroundImage: base64
-        };
-        
-        setCustomThemes([...customThemes, newTheme]);
         
         if (onAddCustomTheme) {
           onAddCustomTheme(newThemeId, base64);
@@ -111,7 +101,6 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
                   className="hidden"
                 />
                 
-                {/* Custom themes first */}
                 {customThemes.map((theme) => (
                   <ThemeOption 
                     key={theme.id}
@@ -122,7 +111,6 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
                   />
                 ))}
                 
-                {/* Default themes */}
                 {themes.map((theme) => (
                   <ThemeOption 
                     key={theme.id}

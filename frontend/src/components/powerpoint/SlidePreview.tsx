@@ -33,7 +33,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
   const [formatPosition, setFormatPosition] = useState({ top: 0, left: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Apply theme styles
   const titleStyle = {
     color: slide.content.textColor || theme.text,
   };
@@ -52,13 +51,12 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
     backgroundColor: theme.background,
     transform: `scale(${scale})`,
     transformOrigin: 'center top',
-    backgroundImage: slide.content.backgroundImage ? `url(${slide.content.backgroundImage})` : 'none',
+    backgroundImage: theme.backgroundImage ? `url(${theme.backgroundImage})` : 'none',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   };
 
   useEffect(() => {
-    // Handle clicks outside the active element
     const handleClickOutside = (e: MouseEvent) => {
       if (activeElement && 
           e.target && 
@@ -79,7 +77,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
     
     setActiveElement(element);
     
-    // Show format controls near the click position
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setFormatPosition({ 
       top: e.clientY - rect.top + 10, 
@@ -96,7 +93,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
   const handleBlur = () => {
     if (!isEditable) return;
     
-    // Save the content when clicking away
     if (activeElement === 'title' && titleRef.current) {
       onContentChange?.({ title: titleRef.current.textContent || '' });
     } else if (activeElement === 'subtitle' && subtitleRef.current) {
@@ -122,7 +118,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
     
     document.execCommand(format, false);
     
-    // Update content after formatting
     if (activeElement === 'content' && contentRef.current) {
       onContentChange?.({ content: contentRef.current.innerHTML || '' });
     } else if (activeElement === 'title' && titleRef.current) {
@@ -156,7 +151,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
     
     document.execCommand('foreColor', false, color);
     
-    // Update content after coloring
     if (activeElement === 'content' && contentRef.current) {
       onContentChange?.({ content: contentRef.current.innerHTML || '' });
     } else if (activeElement === 'title' && titleRef.current) {
@@ -181,7 +175,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
     }
   };
   
-  // Render table if present
   const renderTable = () => {
     if (!slide.content.table) return null;
     
@@ -226,7 +219,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
     );
   };
   
-  // Formatting toolbar that appears when an element is selected
   const renderFormatToolbar = () => {
     if (!showFormatControls || !isEditable) return null;
     
@@ -314,12 +306,9 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
       )}
       style={slideStyle}
     >
-      {/* Format toolbar */}
       {renderFormatToolbar()}
       
-      {/* Slide content */}
       <div className="absolute inset-0 flex">
-        {/* Left side - content */}
         <div className="w-1/2 p-12 overflow-y-auto flex flex-col">
           {slide.content.hasTitle && (slide.content.title || isEditable) ? (
             <div className="relative group">
@@ -417,7 +406,6 @@ const SlidePreview: React.FC<SlidePreviewProps> = ({
           {renderTable()}
         </div>
         
-        {/* Right side - image */}
         <div className="w-1/2 flex items-center justify-center p-6 relative">
           {slide.content.image ? (
             <div className="relative group">

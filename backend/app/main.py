@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # from app.routes.excelProcess import excel
 from app.routes.excelProcess.excelProcessor import router as excel_router
+from app.routes.excelProcess.visualize import router as visualize_router
 
 
 app = FastAPI()
@@ -17,6 +18,7 @@ app.add_middleware(
 
 # Include our route modules with prefixes
 app.include_router(excel_router, prefix="/excel", tags=["Excel Processing"])
+app.include_router(visualize_router, prefix="/excel", tags=["Excel Processing"])
 
 
 @app.get("/")

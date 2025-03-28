@@ -8,9 +8,9 @@ from .excel import generate_pandas_code
 router = APIRouter()
 
 # Define directories
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Current directory (excelProcess/)
-UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")  # Upload folder
-OUTPUT_DIR = os.path.join(BASE_DIR, "output")  # Output folder
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+OUTPUT_DIR = os.path.join(BASE_DIR, "output")
 
 # Ensure both directories exist
 os.makedirs(UPLOAD_DIR, exist_ok=True)

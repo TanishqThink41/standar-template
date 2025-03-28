@@ -124,6 +124,23 @@ const PowerPoint = () => {
   };
   
   React.useEffect(() => {
+    // Whenever presentation.customThemes changes, update our local state
+    if (presentation.customThemes) {
+      const updatedCustomThemes = presentation.customThemes.map((customTheme) => {
+        // Create a full Theme object from the CustomTheme data
+        return {
+          ...themes[0], // Use default theme as base
+          id: customTheme.id,
+          name: `Custom Theme ${customTheme.id.split('-')[1] || ''}`,
+          backgroundImage: customTheme.backgroundImage
+        };
+      });
+      
+      setCustomThemes(updatedCustomThemes);
+    }
+  }, [presentation.customThemes]);
+  
+  React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isPresentationMode) {
         if (e.key === 'ArrowRight' || e.key === ' ') {
@@ -305,6 +322,7 @@ const PowerPoint = () => {
                   onSelectTheme={handleSelectTheme}
                   currentTheme={presentation.theme}
                   onAddCustomTheme={handleAddCustomTheme}
+                  customThemes={customThemes}
                 />
               </ScrollArea>
             </div>
