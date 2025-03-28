@@ -24,8 +24,8 @@ This is a full-stack project with separate **frontend** and **backend** director
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/TanishqThink41/standar-template.git
+cd standar-template
 ```
 
 ---
