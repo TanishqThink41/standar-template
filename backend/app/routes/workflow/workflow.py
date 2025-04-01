@@ -1,19 +1,18 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse  # ✅ Correct import
-
 from sqlalchemy.orm import Session
 import pandas as pd
 import io
 import openai
 import magic
-from app.models import Workflow
-from app.schemas import WorkflowResponse
+from app.routes.workflow.workflowModels import Workflow
+from app.routes.workflow.workflowSchemas import WorkflowResponse
 from app.utils.db import get_db
 from dotenv import load_dotenv
 import shutil
-
 import os
-
+from app.routes.profile.profileHelperFunctions import get_current_user
+from app.routes.profile.profileModels import User
 load_dotenv()
 
 # Load API key from environment variable
@@ -48,18 +47,7 @@ def generate_pandas_code(headers, preview_rows, prompt):
 
 
 
-# @router.post("/start-workflow", response_model=WorkflowResponse)
-# def start_workflow(file: UploadFile = File(...), db: Session = Depends(get_db)):
-#     contents = file.file.read()
-#     workflow = Workflow(file_name=file.filename, pandas_scripts=[])
-#     db.add(workflow)
-#     db.commit()
-#     db.refresh(workflow)
 
-#     with open(f"temp/{workflow.id}_{file.filename}", "wb") as f:
-#         f.write(contents)
-
-#     return workflow
 
 ALLOWED_FILE_TYPES = {
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # .xlsx
@@ -67,27 +55,36 @@ ALLOWED_FILE_TYPES = {
 }
 
 @router.post("/start-workflow")
-def start_workflow(file: UploadFile = File(...), db: Session = Depends(get_db)):
+def start_workflow(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),  # Make sure it's a dict
+):
     if file.content_type not in ALLOWED_FILE_TYPES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {file.content_type}")
 
-    # Ensure the "temp" directory exists
     os.makedirs("temp", exist_ok=True)
+    print(current_user)
+    user = db.query(User).filter(User.email == current_user["sub"]).first()
+    # Extract user ID correctly
+    user_id = user.id  # Use .get() to avoid KeyError
+    print(user_id)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid user authentication")
 
-    # Store file metadata in the database
-    workflow = Workflow(file_name=file.filename, pandas_scripts=[])
+    workflow = Workflow(file_name=file.filename, pandas_scripts=[], created_by=user_id)
     db.add(workflow)
     db.commit()
     db.refresh(workflow)
 
-    # Secure file path
     file_path = os.path.join("temp", f"{workflow.id}_{file.filename}")
 
-    # Save the file efficiently
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
     return {"message": "Workflow started", "workflow_id": workflow.id, "file_path": file_path}
+
+
 
 @router.post("/process-file")
 def process_file(

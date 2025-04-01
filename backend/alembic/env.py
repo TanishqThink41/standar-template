@@ -1,15 +1,25 @@
 from alembic import context 
 import sys
 import os
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config, pool, MetaData
 from logging.config import fileConfig
 
 # Get the absolute path of the project root
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import Base after modifying sys.path
-from app.models import Base
-# target_metadata = Base.metadata
+from app.routes.workflow.workflowModels import Base as WorkflowBase
+from app.routes.profile.profileModels import Base as ProfileBase
+
+# Merge multiple metadata objects into one
+metadata = MetaData()
+for base in [WorkflowBase, ProfileBase]:
+    for table in base.metadata.tables.values():
+        table.tometadata(metadata)
+
+# Use the merged metadata
+target_metadata = metadata
+
 
 
 # this is the Alembic Config object, which provides
@@ -25,7 +35,6 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
 
 
 # other values from the config, defined by the needs of env.py,
