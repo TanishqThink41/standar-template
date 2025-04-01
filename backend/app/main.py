@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # from app.routes.excelProcess import excel
-from app.routes.excelProcess.excelProcessor import router as excel_router
-from app.routes.excelProcess.visualize import router as visualize_router
+# from app.routes.excelProcess.excelProcessor import router as excel_router
+from app.routes.workflow.workflow import router as workflow_router
+from app.routes.profile.profile import router as profile_router
 
 
 app = FastAPI()
@@ -17,9 +18,9 @@ app.add_middleware(
 )
 
 # Include our route modules with prefixes
-app.include_router(excel_router, prefix="/excel", tags=["Excel Processing"])
-app.include_router(visualize_router, prefix="/excel", tags=["Excel Processing"])
-
+# app.include_router(excel_router, prefix="/excel", tags=["Excel Processing"])
+app.include_router(workflow_router, prefix="/workflow", tags=["Workflow"])
+app.include_router(profile_router, prefix="/profile", tags=["Profile"])
 
 @app.get("/")
 async def read_root():
