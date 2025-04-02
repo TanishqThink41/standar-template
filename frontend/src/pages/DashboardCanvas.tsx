@@ -79,7 +79,7 @@ const DashboardCanvas = () => {
   if (!open) return null;
   return (
     <div className="flex h-screen flex-col">
-      <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6">
+      <header className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 px-6">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <Button
@@ -92,13 +92,12 @@ const DashboardCanvas = () => {
             </Button>
             <h1 className="text-xl font-semibold">{workflowName}</h1>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full bg-white/20 text-white hover:bg-white/30"
+          <button 
+            className="rounded-full bg-white p-1"
+            onClick={() => navigate('/auth')}
           >
-            <UserCircle className="h-5 w-5" />
-          </Button>
+            <UserCircle className="h-6 w-6 text-blue-600" />
+          </button>
         </div>
       </header>
       <div className="flex">

@@ -11,7 +11,8 @@ import { WorkflowCard } from "@/components/ui/workflow-card";
 import { FileUploadDialog } from "@/components/file-upload-dialog";
 import { FileViewer } from "@/components/file-viewer";
 // import { WorkflowEditor } from "@/components/workflow-editor";
-import { FileIcon, Cloud, Upload, Trash2 } from "lucide-react";
+import { FileIcon, Trash2 } from "lucide-react";
+import { UploadIcon } from "@/components/icons/UploadIcon";
 import { useNavigate } from "react-router-dom";
 import DashboardCanvas from "./DashboardCanvas";
 
@@ -79,7 +80,7 @@ export default function Dashboard() {
       <main className="flex-grow container mx-auto p-4 md:px-6">
         {/* Main Dashboard Card with gradient background and imported stars image */}
         <div 
-          className="bg-gradient-to-r from-[#1E54E9] to-[#9C37FD] text-white rounded-lg mb-6 relative overflow-hidden p-6 min-h-[220px]"
+          className="bg-gradient-to-r from-[#1E54E9] to-[#9C37FD] text-white rounded-lg mb-6 relative overflow-hidden p-8 min-h-[400px]"
           style={{
             backgroundImage: `url(${Frame1000004231})`,
             backgroundSize: 'cover',
@@ -88,7 +89,7 @@ export default function Dashboard() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center relative z-10">
             <div className="z-10 mb-6 md:mb-0">
-              <h1 className="text-5xl font-bold leading-tight">
+              <h1 className="text-6xl font-bold leading-tight mb-4">
                 Automate<br/>
                 your<br/>
                 workflow
@@ -104,24 +105,14 @@ export default function Dashboard() {
                 selectedFileName={uploadedFileName}
               />
             ) : (
-              <div className="bg-white/10 border border-white/20 rounded-lg p-6 text-center w-72 flex flex-col items-center justify-center">
-                {/* Cloud icon with upload arrow - matching the attached image */}
-                <div className="mb-3 relative">
-                  <div className="bg-white rounded-full p-4 w-16 h-16 flex items-center justify-center">
-                    <div className="text-blue-600">
-                      <Cloud className="h-8 w-8" />
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <div className="mt-1">
-                          <Upload className="h-5 w-5 text-blue-600" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div className="bg-indigo-600/30 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center w-96 h-72 flex flex-col items-center justify-center space-y-4">
+                <div className="bg-white/90 rounded-full p-6 w-28 h-28 flex items-center justify-center">
+                  <UploadIcon className="h-16 w-16 text-blue-600" />
                 </div>
-                <p className="text-white mb-1 text-sm">Drag and Drop your file</p>
-                <p className="text-white text-xs mb-4">or</p>
+                <p className="text-white/90 text-base">Drag and Drop your file</p>
+                <p className="text-white/80 text-sm">or</p>
                 <button
-                  className="bg-white text-gray-700 hover:bg-gray-100 px-8 py-2 rounded-full font-medium"
+                  className="bg-white hover:bg-white/90 text-gray-700 px-6 py-1.5 rounded-md text-sm font-medium"
                   onClick={() => setUploadDialogOpen(true)}
                 >
                   Browse
