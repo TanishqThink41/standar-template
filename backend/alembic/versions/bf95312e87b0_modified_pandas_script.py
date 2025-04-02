@@ -1,8 +1,8 @@
-"""Added id to user
+"""modified pandas script
 
-Revision ID: 131b3224b71e
-Revises: 4c0aa050ca5d
-Create Date: 2025-03-31 14:37:02.770747
+Revision ID: bf95312e87b0
+Revises: 
+Create Date: 2025-04-01 14:14:27.943087
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '131b3224b71e'
-down_revision: Union[str, None] = '4c0aa050ca5d'
+revision: str = 'bf95312e87b0'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -30,16 +30,16 @@ def upgrade() -> None:
     sa.Column('designation', sa.String(), nullable=True),
     sa.Column('company', sa.String(), nullable=True),
     sa.Column('company_reg_no', sa.String(), nullable=True),
-    sa.PrimaryKeyConstraint('id', 'email')
+    sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=False)
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
     op.create_table('workflows',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('file_name', sa.String(), nullable=False),
-    sa.Column('pandas_scripts', postgresql.ARRAY(sa.String()), nullable=False),
-    sa.Column('created_by', sa.String(), nullable=False),
-    sa.ForeignKeyConstraint(['created_by'], ['users.email'], ondelete='CASCADE'),
+    sa.Column('pandas_scripts', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
+    sa.Column('created_by', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['created_by'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_workflows_id'), 'workflows', ['id'], unique=False)

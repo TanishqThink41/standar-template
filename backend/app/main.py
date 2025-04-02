@@ -26,4 +26,4 @@ app.include_router(profile_router, prefix="/profile", tags=["Profile"])
 async def read_root():
     return {"message": "Excel processing API!"}
 
-# To run the app, use: uvicorn main:app --reload
+# To run the app, use: uvicorn app.main:app --reload
