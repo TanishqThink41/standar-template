@@ -4,13 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"; 
-import { z } from "zod"; 
-import { Navigate } from "react-router-dom";
-import { Loader2, Lock } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { insertUserSchema } from "@/services/schema/schema";
+import { z } from "zod";
+import { Redirect } from "wouter";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-
+import loginImage from "../assets/login-image.jpg";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -59,12 +60,12 @@ export default function AuthPage() {
 
   // Redirect if user is already logged in
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Redirect to="/" />;
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Card className="w-full max-w-[600px] shadow-sm overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <Card className="w-full max-w-[1000px] h-[660px] shadow-sm overflow-hidden">
         <CardContent className="p-8">
           <div className="flex">
             <div className="w-full md:w-1/2">
@@ -227,7 +228,11 @@ export default function AuthPage() {
               )}
             </div>
             <div className="hidden md:flex md:w-1/2 items-center justify-center">
-              <Lock className="w-24 h-24 text-blue-600" />
+              <img
+                src={loginImage}
+                className="w-full max-w-[220px] h-auto"
+                alt="Login illustration"
+              />
             </div>
           </div>
         </CardContent>
