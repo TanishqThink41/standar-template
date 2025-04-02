@@ -65,20 +65,20 @@ export default function AuthPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
-      <Card className="w-full max-w-[1000px] h-[660px] shadow-sm overflow-hidden">
-        <CardContent className="p-8">
+      <Card className="w-full max-w-[800px] shadow-sm overflow-hidden">
+        <CardContent className="p-6">
           <div className="flex">
             <div className="w-full md:w-1/2">
-              <div className="mb-4">
-                <h1 className="text-xl font-semibold mb-1">Welcome to Agentix41</h1>
-                <p className="text-gray-500 text-xs">Powering Conversations with Think41</p>
+              <div className="mb-6">
+                <h1 className="text-2xl font-semibold mb-1">Welcome to Agentix41</h1>
+                <p className="text-gray-500 text-sm">Powering Conversations with Think41</p>
               </div>
               
               {!showRegister ? (
                 <>
                   <Button 
                     variant="outline" 
-                    className="w-full flex items-center justify-center gap-2 mb-6 py-2 border-gray-300 rounded-md"
+                    className="w-full flex items-center justify-center gap-3 mb-4 py-2.5 border-gray-200 rounded-lg hover:bg-gray-50"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -89,7 +89,7 @@ export default function AuthPage() {
                     Sign in with Google
                   </Button>
                   
-                  <div className="flex items-center my-4">
+                  <div className="flex items-center my-5">
                     <div className="flex-grow h-px bg-gray-200"></div>
                     <span className="px-3 text-xs text-gray-500">Or continue with email</span>
                     <div className="flex-grow h-px bg-gray-200"></div>
@@ -102,7 +102,7 @@ export default function AuthPage() {
                         <Input
                           id="username"
                           placeholder="Enter your email"
-                          className="h-9 text-sm"
+                          className="h-11 text-sm"
                           {...loginForm.register("username")}
                         />
                         {loginForm.formState.errors.username && (
@@ -116,7 +116,7 @@ export default function AuthPage() {
                           id="password"
                           type="password"
                           placeholder="Enter your password"
-                          className="h-9 text-sm"
+                          className="h-11 text-sm"
                           {...loginForm.register("password")}
                         />
                         {loginForm.formState.errors.password && (
@@ -145,7 +145,7 @@ export default function AuthPage() {
                         Sign in
                       </Button>
                       
-                      <div className="text-center text-xs mt-4 text-gray-600">
+                      <div className="text-center text-xs mt-2 text-gray-600">
                         Don't have an account?{" "}
                         <button 
                           type="button"
