@@ -24,9 +24,9 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/powerpoint" element={<PowerPoint />} />
-            <Route path="/dashboard" element={<DashboardCanvas />} />
+            <Route path="/workflow" element={<DashboardCanvas />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

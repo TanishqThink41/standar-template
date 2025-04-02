@@ -6,7 +6,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<{ onDragStart: (event: React.DragEvent, nodeType: string) => void }> = ({ onDragStart }) => {
     return (
-      <div className="w-1/4 p-4 bg-gray-100 border-r">
+      <div className="w-1/4 p-4 bg-gray-100 border-r h-full">
         <p className="font-bold mb-2">Drag to Add:</p>
         <div className="p-2 bg-white border rounded shadow cursor-grab" draggable onDragStart={(event) => onDragStart(event, "file")}>
           📂 File Node

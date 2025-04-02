@@ -1,4 +1,6 @@
 import React, { useState, useCallback } from "react";
+import { ArrowLeft, UserCircle, PlusCircle, Database, Bot, BarChartHorizontal, SquareCode } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ReactFlow, {
   Background,
   addEdge,
@@ -13,16 +15,27 @@ import { nanoid } from "nanoid";
 import Sidebar from "@/components/DashboardCanvas/Sidebar";
 import FileNode from "@/components/DashboardCanvas/FileNode";
 import ProcessingNode from "@/components/DashboardCanvas/ProcessingNode";
+import { useNavigate } from "react-router-dom";
+
+
+
+interface WorkflowEditorProps {
+  open: boolean;
+  onClose: () => void;
+  // fileName?: string;
+}
 
 const nodeTypes = {
-    fileNode: FileNode,
-    processingNode: ProcessingNode,
-  };
-  
+  fileNode: FileNode,
+  processingNode: ProcessingNode,
+};
 
-const DashboardCanvas: React.FC = () => {
+
+const DashboardCanvas = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [workflowName, setWorkflowName] = useState("New Workflow");
+  const navigate = useNavigate()
 
   const updateNodeData = (id: string, newData: any) => {
     setNodes((nds) =>
@@ -32,7 +45,7 @@ const DashboardCanvas: React.FC = () => {
 
   const onConnect = useCallback((params: Connection) => {
     setEdges((eds) => addEdge(params, eds));
-    
+
     const sourceNode = nodes.find((n) => n.id === params.source);
     if (sourceNode?.data?.file) {
       updateNodeData(params.target!, { file: sourceNode.data.file });
@@ -48,7 +61,7 @@ const DashboardCanvas: React.FC = () => {
     event.preventDefault();
     const type = event.dataTransfer.getData("application/reactflow");
     const position = { x: event.clientX - 100, y: event.clientY - 50 };
-  
+
     if (type === "file") {
       setNodes((nds) => [
         ...nds,
@@ -61,22 +74,47 @@ const DashboardCanvas: React.FC = () => {
       ]);
     }
   };
-  
 
+
+  if (!open) return null;
   return (
-    <div className="flex h-screen">
-      <Sidebar onDragStart={onDragStart} />
-      <div className="w-3/4 h-screen" onDrop={onDrop} onDragOver={(e) => e.preventDefault()}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-        >
-          <Background />
-        </ReactFlow>
+    <div className="flex h-screen flex-col">
+      <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/dashboard')}
+              className="text-white hover:bg-white/10 mr-4"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h1 className="text-xl font-semibold">{workflowName}</h1>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-white/20 text-white hover:bg-white/30"
+          >
+            <UserCircle className="h-5 w-5" />
+          </Button>
+        </div>
+      </header>
+      <div className="flex">
+        <Sidebar onDragStart={onDragStart} />
+        <div className="w-3/4 h-[calc(100vh-64px)]" onDrop={onDrop} onDragOver={(e) => e.preventDefault()}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+          >
+            <Background />
+          </ReactFlow>
+        </div>
       </div>
     </div>
   );

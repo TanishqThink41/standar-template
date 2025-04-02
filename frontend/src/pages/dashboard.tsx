@@ -10,8 +10,10 @@ import { FileCard } from "@/components/ui/file-card";
 import { WorkflowCard } from "@/components/ui/workflow-card";
 import { FileUploadDialog } from "@/components/file-upload-dialog";
 import { FileViewer } from "@/components/file-viewer";
-import { WorkflowEditor } from "@/components/workflow-editor";
-import { FileIcon, Cloud, Trash2 } from "lucide-react";
+// import { WorkflowEditor } from "@/components/workflow-editor";
+import { FileIcon, Cloud, Upload, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import DashboardCanvas from "./DashboardCanvas";
 
 // Mock data for the files
 const mockFiles = [
@@ -41,6 +43,7 @@ export default function Dashboard() {
   const [workflowEditorOpen, setWorkflowEditorOpen] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [activeTab, setActiveTab] = useState<string>("data");
+  const navigate = useNavigate()
   
   // Use the mock data instead of the API data
   const files = mockFiles;
@@ -56,6 +59,9 @@ export default function Dashboard() {
 
   const handleAddWorkflow = () => {
     setWorkflowEditorOpen(true);
+    navigate("/workflow", {
+        state: { key: "value", user: "John Doe" }, // Example state
+    });
   };
 
   const handleFileSelected = (fileName: string) => {
@@ -89,7 +95,7 @@ export default function Dashboard() {
               </h1>
             </div>
             
-            {/* Upload Section - Styled to match image2 */}
+            {/* Upload Section - Styled to match image */}
             {uploadedFileName ? (
               <DragDropUpload 
                 onFileUploaded={handleFileUploaded}
@@ -99,8 +105,18 @@ export default function Dashboard() {
               />
             ) : (
               <div className="bg-white/10 border border-white/20 rounded-lg p-6 text-center w-72 flex flex-col items-center justify-center">
-                <div className="mb-3">
-                  <Cloud size={48} className="text-white" />
+                {/* Cloud icon with upload arrow - matching the attached image */}
+                <div className="mb-3 relative">
+                  <div className="bg-white rounded-full p-4 w-16 h-16 flex items-center justify-center">
+                    <div className="text-blue-600">
+                      <Cloud className="h-8 w-8" />
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div className="mt-1">
+                          <Upload className="h-5 w-5 text-blue-600" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <p className="text-white mb-1 text-sm">Drag and Drop your file</p>
                 <p className="text-white text-xs mb-4">or</p>
@@ -244,12 +260,6 @@ export default function Dashboard() {
       <FileViewer
         open={fileViewerOpen}
         onClose={() => setFileViewerOpen(false)}
-        fileName={uploadedFileName}
-      />
-      
-      <WorkflowEditor
-        open={workflowEditorOpen}
-        onClose={() => setWorkflowEditorOpen(false)}
         fileName={uploadedFileName}
       />
     </div>
