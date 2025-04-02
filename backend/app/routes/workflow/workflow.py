@@ -6,7 +6,7 @@ import io
 import openai
 import magic
 from app.routes.workflow.workflowModels import Workflow
-from app.routes.workflow.workflowSchemas import WorkflowResponse
+from app.routes.workflow.workflowSchemas import WorkflowResponse, UpdatePandasScriptsRequest
 from app.utils.db import get_db
 from dotenv import load_dotenv
 import shutil
@@ -22,7 +22,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 router = APIRouter()
 
-
+#  AI FUNCTION THAT GENERATES PANDAS CODE 
 def generate_pandas_code(headers, preview_rows, prompt):
     """Generates Pandas code using GPT-4o mini."""
     client = openai.OpenAI()  # Initialize OpenAI client
@@ -48,17 +48,19 @@ def generate_pandas_code(headers, preview_rows, prompt):
 
 
 
-
+# ALLOWED FILE TYPES WHICH CAN BE PROCESSED IN THE WEBSITE
 ALLOWED_FILE_TYPES = {
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # .xlsx
     "application/vnd.ms-excel"  # .xls
 }
 
+
+#  STARTS WORKFLOW BY INITIALIZING AN EMPTY WORKFLOW ROW IN WORKFLOW DATABASE
 @router.post("/start-workflow")
 def start_workflow(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),  # Make sure it's a dict
+    current_user: User = Depends(get_current_user), 
 ):
     if file.content_type not in ALLOWED_FILE_TYPES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {file.content_type}")
@@ -85,7 +87,7 @@ def start_workflow(
     return {"message": "Workflow started", "workflow_id": workflow.id, "file_path": file_path}
 
 
-
+# PROCESS FILE BY GENERATING PANDAS CODE AND EXECUTING IT 
 @router.post("/process-file")
 def process_file(
     workflow_id: int,
@@ -132,10 +134,10 @@ def process_file(
         workflow.pandas_scripts = []
 
     # Save generated code to workflow
-    workflow.pandas_scripts.append(generated_code)
-    db.add(workflow)
-    db.commit()
-    db.refresh(workflow)
+    # workflow.pandas_scripts.append(generated_code)
+    # db.add(workflow)
+    # db.commit()
+    # db.refresh(workflow)
 
     # Prepare execution environment
     exec_globals = {"df": df.copy(), "pd": pd}
@@ -176,21 +178,95 @@ def process_file(
 
 
 
+# UPDATE PANDAS SCRIPTS IN WORKFLOW TABLE 
+@router.put("/workflow/update-pandas-scripts/{workflow_id}")
+def update_pandas_scripts(workflow_id: int, update_data: UpdatePandasScriptsRequest, db: Session = Depends(get_db)):
+    # Fetch the workflow by ID
+    workflow = db.query(Workflow).filter(Workflow.id == workflow_id).first()
+
+    if not workflow:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+
+    # Update the pandas_scripts field with new data
+    workflow.pandas_scripts = update_data.pandas_scripts
+
+    # Commit the changes
+    db.add(workflow)
+    db.commit()
+    db.refresh(workflow)
+
+    return {"message": "Pandas scripts updated successfully", "updated_pandas_scripts": workflow.pandas_scripts}
 
 
+# APPLY WORKFLOW BY EXECUTING THE PANDAS CODE IN PANDAS SCRIPT IN WORKFLOW TABLE 
 @router.post("/apply-workflow")
-def apply_workflow(workflow_id: int, db: Session = Depends(get_db)):
+def apply_workflow(
+    workflow_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    # Fetch the workflow from the database
     workflow = db.query(Workflow).filter(Workflow.id == workflow_id).first()
     if not workflow:
         raise HTTPException(status_code=404, detail="Workflow not found")
 
-    with open(f"temp/{workflow_id}_{workflow.file_name}", "rb") as f:
-        df = pd.read_csv(f)
+    # Read the uploaded file
+    contents = file.file.read()
 
-    exec_globals = {"pd": pd, "df": df}
-    for code in workflow.pandas_scripts:
-        exec(code, exec_globals)
+    # Detect file type
+    mime = magic.Magic(mime=True)
+    file_type = mime.from_buffer(contents[:2048])  # Check first 2KB
 
-    df_result = exec_globals["df"]
-    output_csv = df_result.to_csv(index=False)
-    return {"message": "Workflow applied.", "output": output_csv}
+    # Load DataFrame based on file type
+    if file_type == "text/csv":
+        df = pd.read_csv(io.BytesIO(contents))
+    elif file_type in ALLOWED_FILE_TYPES:
+        df = pd.read_excel(io.BytesIO(contents), engine="openpyxl")
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported file format")
+
+    # Debug: Print original DataFrame
+    print("Original DataFrame before processing:\n", df.head())
+
+    if df.empty:
+        return JSONResponse(content={"error": "Uploaded file contains no data."}, status_code=400)
+
+    # Prepare dictionary to store results of each script
+    script_results = {}
+
+    # Execute each script in workflow.pandas_scripts
+    for script_info in workflow.pandas_scripts:
+        script_name = script_info.get("name")
+        script = script_info.get("script")
+
+        # Initialize execution environment with a fresh DataFrame copy
+        exec_globals = {"pd": pd, "df": df.copy()}
+        exec_globals["result_df"] = df.copy()  # Ensure result_df exists
+
+        # Debug: Print the script being executed
+        print(f"Executing script: {script_name}")
+
+        try:
+            # Execute the script on the dataframe
+            exec(script, exec_globals)
+        except Exception as e:
+            script_results[script_name] = f"Error executing script: {str(e)}"
+            continue
+
+        # Get the result DataFrame from execution
+        result_df = exec_globals.get("result_df")
+
+        if result_df is None:
+            script_results[script_name] = "Generated code did not produce a valid DataFrame."
+            continue
+
+        # Ensure result_df is a DataFrame and clean the data (replace NaN and inf values)
+        if isinstance(result_df, pd.Series):
+            result_df = result_df.to_frame()
+        result_df = result_df.replace([float("inf"), float("-inf")], None)
+        result_df = result_df.where(pd.notnull(result_df), None)
+
+        script_results[script_name] = result_df.to_csv(index=False)
+
+    # Return the results in structured JSON
+    return JSONResponse(content={"message": "Workflow applied.", "results": script_results})
